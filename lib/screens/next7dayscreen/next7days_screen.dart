@@ -1,14 +1,23 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:weather_app/screens/next7dayscreen/widget/Next7Days_bottom_body_widget.dart';
-import 'package:weather_app/screens/next7dayscreen/widget/TopBodyDetils_widget.dart';
-import 'package:weather_app/widget/glassbox.dart';
+
+import 'package:provider/provider.dart';
+import 'package:weather_app/screens/next7dayscreen/widget/next7bays_bottom_body_widget.dart';
+import 'package:weather_app/screens/next7dayscreen/widget/top_body_betils_widget.dart';
+import 'package:weather_app/screens/widget/glassbox.dart';
+
+import '../../model/forecastday.dart';
+import '../../provider/weather_provider.dart';
 
 class Next7DaysScrren extends StatelessWidget {
-  const Next7DaysScrren({super.key});
+  final List<Forecastday>? forecastday;
+  const Next7DaysScrren({super.key, this.forecastday});
 
   @override
   Widget build(BuildContext context) {
+    final wprov = Provider.of<WeatherProvider>(context, listen: false);
+    wprov.mySnackBar(context);
     return Scaffold(
       // extendBody: true,
       extendBodyBehindAppBar: true,
@@ -76,13 +85,16 @@ class Next7DaysScrren extends StatelessWidget {
                         height: 70.h,
                         child: Row(
                           children: [
-                            Text('Tommorow',
+                            Text('Tommorow ',
                                 style: TextStyle(
                                     fontSize: 18.sp,
                                     color: const Color(0xFF303345),
                                     fontWeight: FontWeight.bold)),
                             Expanded(child: Container()),
-                            Text('22 °',
+                            Text(
+                                // '22 °',
+
+                                '${wprov.tommorowDay()!.day!.maxtempC}',
                                 style: TextStyle(
                                     fontSize: 16.sp,
                                     color: const Color(0xFF303345),
@@ -90,10 +102,22 @@ class Next7DaysScrren extends StatelessWidget {
                             SizedBox(
                               width: 75.w,
                               height: 75.h,
-                              child: Image.asset(
-                                'images/page2_icon.png',
-                                fit: BoxFit.cover,
+                              child:
+                                  //  Image.asset(
+                                  //   'images/page2_icon.png',
+
+                                  CachedNetworkImage(
+                                imageUrl:
+                                    "http:${wprov.tommorowDay()!.day!.condition!.icon}",
+                                // placeholder: (context, url) => CircularProgressIndicator(),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error,
+                                        color: Color(0xfff39876)),
                               ),
+                              //     Image.network(
+                              //   'http:${wprov.currentfday()!.day!.condition!.icon}',
+                              //   fit: BoxFit.cover,
+                              // ),
                             )
                           ],
                         ),
@@ -108,56 +132,73 @@ class Next7DaysScrren extends StatelessWidget {
                                 TopBodyDetils(
                                     imgSisz: 40.h,
                                     img: 'images/unbrellaicon.png',
-                                    title: '1 cm'),
+                                    title:
+                                        '${wprov.tommorowDay()!.day!.avgvisMiles!.toInt()} cm'),
                                 TopBodyDetils(
                                     imgSisz: 40.h,
                                     img: 'images/wind_icon.png',
-                                    title: '15 km/h'),
+                                    title:
+                                        '${wprov.tommorowDay()!.day!.maxwindKph!.toInt()} km/h'),
                                 TopBodyDetils(
-                                    imgSisz: 40.h,
-                                    img: 'images/humidity_icon.png',
-                                    title: '50 %'),
+                                  imgSisz: 40.h,
+                                  img: 'images/humidity_icon.png',
+                                  title:
+                                      '${wprov.tommorowDay()!.day!.avghumidity!.toInt()} %',
+                                ),
                               ]),
                         ),
                       )
                     ]),
                   ),
+
                   SizedBox(height: 20.h),
-                  const Next7DaysWidget(
-                    day: 'Thursday',
-                    degree: '21 °',
-                    img: 'images/sun1_icon_bar.png',
-                  ),
-                  SizedBox(height: 10.h),
-                  const Next7DaysWidget(
-                    day: 'Friday',
-                    degree: '24 °',
-                    img: 'images/sun1_icon_bar.png',
-                  ),
-                  SizedBox(height: 10.h),
-                  const Next7DaysWidget(
-                    day: 'Saturday',
-                    degree: '18 °',
-                    img: 'images/page2_icon.png',
-                  ),
-                  SizedBox(height: 10.h),
-                  const Next7DaysWidget(
-                    day: 'Sunday',
-                    degree: '12 °',
-                    img: 'images/clud2.png',
-                  ),
-                  SizedBox(height: 10.h),
-                  const Next7DaysWidget(
-                    day: 'Monday',
-                    degree: '16 °',
-                    img: 'images/clud_raining_icon.png',
-                  ),
-                  SizedBox(height: 10.h),
-                  const Next7DaysWidget(
-                    day: 'Tuesday',
-                    degree: '18 °',
-                    img: 'images/clud_raining_icon.png',
-                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: forecastday!.length,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            Next7DaysWidget(
+                              day: wprov.dayformat(day: index),
+                              degree: '${forecastday![index].day!.maxtempC} °',
+                              img:
+                                  'http:${forecastday![1].day!.condition!.icon}',
+                            ),
+                            SizedBox(height: 10.h),
+                          ],
+                        );
+                      },
+                    ),
+                  )
+                  // const Next7DaysWidget(
+                  //   day: 'Friday',
+                  //   degree: '24 °',
+                  //   img: 'images/sun1_icon_bar.png',
+                  // ),
+                  // SizedBox(height: 10.h),
+                  // const Next7DaysWidget(
+                  //   day: 'Saturday',
+                  //   degree: '18 °',
+                  //   img: 'images/page2_icon.png',
+                  // ),
+                  // SizedBox(height: 10.h),
+                  // const Next7DaysWidget(
+                  //   day: 'Sunday',
+                  //   degree: '12 °',
+                  //   img: 'images/clud2.png',
+                  // ),
+                  // SizedBox(height: 10.h),
+                  // const Next7DaysWidget(
+                  //   day: 'Monday',
+                  //   degree: '16 °',
+                  //   img: 'images/clud_raining_icon.png',
+                  // ),
+                  // SizedBox(height: 10.h),
+                  // const Next7DaysWidget(
+                  //   day: 'Tuesday',
+                  //   degree: '18 °',
+                  //   img: 'images/clud_raining_icon.png',
+                  // ),
                 ]),
           ),
         ),

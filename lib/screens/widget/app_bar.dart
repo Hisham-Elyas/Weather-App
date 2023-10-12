@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../searh_screen/search_sereen.dart';
+
 class MyAppbar extends StatelessWidget {
-  MyAppbar({super.key});
+  const MyAppbar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,11 +20,17 @@ class MyAppbar extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(
-                    height: 35.h,
-                    width: 35.w,
-                    child:
-                        Image.asset('images/srch_icon.png', fit: BoxFit.fill)),
+                InkWell(
+                  onTap: () {
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (ctx) => const SearchScreen()));
+                  },
+                  child: SizedBox(
+                      height: 35.h,
+                      width: 35.w,
+                      child: Image.asset('images/srch_icon.png',
+                          fit: BoxFit.fill)),
+                ),
                 SizedBox(
                   height: 8.h,
                   width: 70.w,

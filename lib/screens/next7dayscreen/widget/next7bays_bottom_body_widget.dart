@@ -1,7 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../widget/glassbox.dart';
+import '../../widget/glassbox.dart';
 
 class Next7DaysWidget extends StatelessWidget {
   final String day;
@@ -46,9 +47,20 @@ class Next7DaysWidget extends StatelessWidget {
               SizedBox(
                 width: imgSisz,
                 height: imgSisz,
-                child: Image.asset(
-                  img,
-                  fit: BoxFit.cover,
+                child:
+                    // Image.asset(
+                    //     Image.network(
+                    //   img,
+                    //   fit: BoxFit.cover,
+                    // ),
+
+                    CachedNetworkImage(
+                  imageUrl: img,
+                  // placeholder: (context, url) => CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => const Icon(
+                    Icons.error,
+                    color: Color(0xfff39876),
+                  ),
                 ),
               )
             ],

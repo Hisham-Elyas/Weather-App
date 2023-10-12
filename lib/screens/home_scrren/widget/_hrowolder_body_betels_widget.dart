@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../widget/glassbox.dart';
+import '../../widget/glassbox.dart';
 
-class rowHolderBody extends StatelessWidget {
+class RowHolderBody extends StatelessWidget {
   final String img;
   final String title;
   final String lasttitle;
-  const rowHolderBody({
+  const RowHolderBody({
     super.key,
     required this.img,
     required this.title,

@@ -1,0 +1,921 @@
+////   <http://api.weatherapi.com/v1/forecast.json?key=bd4c80d2417e4738b33152837232409&q=sudan&days=1&aqi=yes&alerts=yes>
+///
+Request
+Request URL
+Request to WeatherAPI.com API consists of base url and API method. You can make both HTTP or HTTPS request to our API.
+
+Base URL: <http://api.weatherapi.com/v1>
+
+API API Method
+Current weather /current.json or /current.xml
+Forecast /forecast.json or /forecast.xml
+Search or Autocomplete /search.json or /search.xml
+History /history.json or /history.xml
+Marine /marine.json or /marine.xml
+Future /future.json or /future.xml
+Time Zone /timezone.json or /timezone.xml
+Sports /sports.json or /sports.xml
+Astronomy /astronomy.json or /astronomy.xml
+IP Lookup /ip.json or /ip.xml
+Request Parameters
+Parameter  Description
+key Required API Key
+q Required 
+Query parameter based on which data is sent back. It could be following:
+
+Latitude and Longitude (Decimal degree) e.g: q=48.8567,2.3508
+city name e.g.: q=Paris
+US zip e.g.: q=10001
+UK postcode e.g: q=SW1
+Canada postal code e.g: q=G2J
+metar:<metar code> e.g: q=metar:EGLL
+iata:<3 digit airport code> e.g: q=iata:DXB
+auto:ip IP lookup e.g: q=auto:ip
+IP address (IPv4 and IPv6 supported) e.g: q=100.0.0.1
+bulk New
+days Required only with forecast API method. 
+Number of days of forecast required.
+
+days parameter value ranges between 1 and 14. e.g: days=5
+
+If no days parameter is provided then only today's weather is returned.
+
+dt (Required for History and Future API) Restrict date output for Forecast and History API method. 
+For history API 'dt' should be on or after 1st Jan, 2010 in yyyy-MM-dd format (i.e. dt=2010-01-01)
+
+For forecast API 'dt' should be between today and next 14 day in yyyy-MM-dd format (i.e. dt=2010-01-01)
+
+For future API 'dt' should be between 14 days and 300 days from today in the future in yyyy-MM-dd format (i.e. dt=2023-01-01)
+
+(Optional) unixdt Unix Timestamp used by Forecast and History API method. 
+unixdt has same restriction as 'dt' parameter. Please either pass 'dt' or 'unixdt' and not both in same request. e.g.: unixdt=1490227200
+
+(Optional) end_dt (Available for History API) Restrict date output for History API method. 
+For history API 'end_dt' should be on or after 1st Jan, 2010 in yyyy-MM-dd format (i.e. dt=2010-01-01)
+
+'end_dt' should be greater than 'dt' parameter and difference should not be more than 30 days between the two dates.
+
+Only works for API on Pro plan and above.
+
+(Optional) unixend_dt Unix Timestamp used by History API method. 
+unixend_dt has same restriction as 'end_dt' parameter. Please either pass 'end_dt' or 'unixend_dt' and not both in same request. e.g.: unixend_dt=1490227200
+
+(Optional) hour Restricting forecast or history output to a specific hour in a given day. 
+Must be in 24 hour. For example 5 pm should be hour=17, 6 am as hour=6
+
+(Optional) alerts New Disable alerts in forecast API output 
+alerts=yes or alerts=no
+
+(Optional) aqi New Enable/Disable Air Quality data in forecast API output 
+aqi=yes or aqi=no
+
+(Optional) tides New Enable/Disable Tide data in Marine API output 
+tides=yes or tides=no
+
+(Optional) tp New Get 15 min interval data for Forecast and History API. Available for Enterprise clients only. 
+tp=15
+
+(Optional) lang Returns 'condition:text' field in API in the desired language 
+Please pass 'lang code' from below table. e.g.: lang=fr
+
+Language lang code
+Arabic ar
+Bengali bn
+Bulgarian bg
+Chinese Simplified zh
+Chinese Traditional zh_tw
+Czech cs
+Danish da
+Dutch nl
+Finnish fi
+French fr
+German de
+Greek el
+Hindi hi
+Hungarian hu
+Italian it
+Japanese ja
+Javanese jv
+Korean ko
+Mandarin zh_cmn
+Marathi mr
+Polish pl
+Portuguese pt
+Punjabi pa
+Romanian ro
+Russian ru
+Serbian sr
+Sinhalese si
+Slovak sk
+Spanish es
+Swedish sv
+Tamil ta
+Telugu te
+Turkish tr
+Ukrainian uk
+Urdu ur
+Vietnamese vi
+Wu (Shanghainese) zh_wuu
+Xiang zh_hsn
+Yue (Cantonese) zh_yue
+Zulu zu
+Location Object
+Location object is returned with each API response. It is actually the matched location for which the information has been returned.
+
+It returns information about the location including geo points, name, region, country and time zone information as well.
+
+When using Search or Autocomplete API following fields are NOT returned tz_id, localtime_epoch and localtime.
+
+Field Data Type Description
+lat decimal Latitude in decimal degree
+lon decimal Longitude in decimal degree
+name string Location name
+region string Region or state of the location, if availa
+country string Location country
+tz_id string Time zone name
+localtime_epoch int Local date and time in unix time
+localtime string Local date and time
+Weather Alerts
+Forecast API returns alerts and warnings issued by government agencies (USA, UK, Europe and Rest of the World) as an array if available for the location provided through the Forecast API.
+
+By default alerts are not returned. To get alerts back in the response from Forecast API, pass the parameter alerts=yes.
+
+Note: Some of the alerts may be in local language of the location.
+
+Field Data Type Description
+headline string Alert headline
+msgType string Type of alert
+severity string Severity of alert
+urgency string Urgency
+areas string Areas covered
+category string Category
+certainty string Certainty
+event string Event
+note string Note
+effective date Effective
+expires string Expires
+desc string Description
+instruction string Instruction
+Example response of alerts
+
+"alerts":{
+    "alert":[
+        {
+        "headline":"Flood Warning issued January 05 at 9:47PM EST until January 07 at 6:15AM EST by NWS",
+        "msgtype":"Alert",
+        "severity":"Moderate",
+        "urgency":"Expected",
+        "areas":"Calhoun; Lexington; Richland",
+        "category":"Met",
+        "certainty":"Likely",
+        "event":"Flood Warning",
+        "note":"Alert for Calhoun; Lexington; Richland (South Carolina) Issued by the National Weather Service",
+        "effective":"2021-01-05T21:47:00-05:00",
+        "expires":"2021-01-07T06:15:00-05:00",
+        "desc":"...The Flood Warning continues for the following rivers in South\nCarolina...\nCongaree River At Carolina Eastman affecting Richland, Calhoun\nand Lexington Counties.\nCongaree River At Congaree National Park-Gadsden affecting\nCalhoun and Richland Counties.\nNorth Fork Edisto River At Orangeburg affecting Orangeburg County.\n...The Flood Warning is now in effect until Thursday morning...\nThe Flood Warning continues for\nthe Congaree River At Carolina Eastman.\n*Until Thursday morning.\n* At 9:28 PM EST Tuesday the stage was 115.6 feet.\n*Flood stage is 115.0 feet.\n* Minor flooding is occurring and minor flooding is forecast.\n*Recent Activity...The maximum river stage in the 24 hours ending\nat 9:28 PM EST Tuesday was 118.2 feet.\n* Forecast...The river will rise to 115.7 feet just after midnight\ntonight. It will then fall below flood stage tomorrow morning to\n114.2 feet and begin rising again tomorrow evening. It will rise\nto 114.3 feet early Thursday morning. It will then fall again and\nremain below flood stage.\n*Impact...At 115.0 feet, Flooding occurs in low lying areas of the\nCarolina Eastman Facility and at the Congaree National Park.\n* Flood History...This crest compares to a previous crest of 116.3\nfeet on 12/03/2020.\n&&",
+        "instruction":"A Flood Warning means that flooding is imminent or occurring. All\ninterested parties should take necessary precautions immediately.\nMotorists should not attempt to drive around barricades or drive\ncars through flooded areas.\nCaution is urged when walking near riverbanks.\nAdditional information is available at www.weather.gov.\nThe next statement will be issued Wednesday morning at 1000 AM EST."
+        },
+        {
+        "headline":"Flood Warning issued January 05 at 9:47PM EST until January 09 at 4:00AM EST by NWS",
+        "msgtype":"Alert",
+        "severity":"Moderate",
+        "urgency":"Expected",
+        "areas":"Calhoun; Richland",
+        "category":"Met",
+        "certainty":"Likely",
+        "event":"Flood Warning",
+        "note":"Alert for Calhoun; Richland (South Carolina) Issued by the National Weather Service",
+        "effective":"2021-01-05T21:47:00-05:00",
+        "expires":"2021-01-09T04:00:00-05:00",
+        "desc":"...The Flood Warning continues for the following rivers in South\nCarolina...\nCongaree River At Carolina Eastman affecting Richland, Calhoun\nand Lexington Counties.\nCongaree River At Congaree National Park-Gadsden affecting\nCalhoun and Richland Counties.\nNorth Fork Edisto River At Orangeburg affecting Orangeburg County.\n...The Flood Warning is now in effect until early Saturday morning...\nThe Flood Warning continues for\nthe Congaree River At Congaree National Park-Gadsden.\n*Until late Friday night.\n* At 9:00 PM EST Tuesday the stage was 16.5 feet.\n*Flood stage is 15.0 feet.\n* Minor flooding is occurring and minor flooding is forecast.\n*Recent Activity...The maximum river stage in the 24 hours ending\nat 9:00 PM EST Tuesday was 17.2 feet.\n* Forecast...The river is expected to fall below flood stage early\nFriday morning and continue falling to 12.4 feet Sunday evening.\n*Impact...At 15.0 feet, Flooding begins in the Congaree National\nPark. This will begin to produce flooding of portions of the lower\nboardwalk.\n* Impact...At 17.0 feet, The access road to the Sandy Run\nsubdivision becomes flooded. The lower boardwalk in the Congaree\nNational Park becomes flooded by Cedar Creek.\n*Impact...At 18.0 feet, Several homes in the Sandy Run subdivision\nalong the river become flooded. At 18 feet the river covers the\nWeston Lake overlook in the Congaree National Park. Between 18 and\n18.5 feet the river begins to cover sections of the elevated\nboardwalk.\n* Flood History...This crest compares to a previous crest of 16.3\nfeet on 12/03/2020.\n&&",
+        "instruction":"A Flood Warning means that flooding is imminent or occurring. All\ninterested parties should take necessary precautions immediately.\nMotorists should not attempt to drive around barricades or drive\ncars through flooded areas.\nCaution is urged when walking near riverbanks.\nAdditional information is available at www.weather.gov.\nThe next statement will be issued Wednesday morning at 1000 AM EST."
+        }
+    ]
+}
+
+Air Quality Data
+Air Quality data is returned in the Forecast API and Realtime API response. Depending upon your subscription plan we provide current and 3 day air quality data for the given location in json and xml.
+
+It provides air quality index (see below) data on major pollutant gases like Carbon monoxide (CO), Ozone (O3), Nitrogen dioxide (NO2), Sulphur dioxide (SO2), PM 2.5 and PM 10.
+
+By default air quality data is not returned. To get air quality data back in the response from Forecast API and Realtime API, pass the parameter aqi=yes.
+
+Field Data Type Description
+co float Carbon Monoxide (μg/m3)
+o3 float Ozone (μg/m3)
+no2 float Nitrogen dioxide (μg/m3)
+so2 float Sulphur dioxide (μg/m3)
+pm2_5 float PM2.5 (μg/m3)
+pm10 float PM10 (μg/m3)
+us-epa-index integer US - EPA standard.
+1 means Good
+2 means Moderate
+3 means Unhealthy for sensitive group
+4 means Unhealthy
+5 means Very Unhealthy
+6 means Hazardous
+gb-defra-index integer UK Defra Index (See table below)
+UK DEFRA INDEX Table
+Index 1 2 3 4 5 6 7 8 9 10
+Band Low Low Low Moderate Moderate Moderate High High High Very High
+µgm-3 0-11 12-23 24-35 36-41 42-47 48-53 54-58 59-64 65-70 71 or more
+Bulk Request
+If you are on Pro+, Business or Enterprise plan then you may use our bulk weather option to send multiple locations to get weather for all the locations sent in a single request.
+
+Each location sent in bulk operation is counted as 1 call. It works for all the API methods except Search API.
+
+For bulk you need to pass in the querysting q=bulk and then pass a json body with utf-8 encoding. All the the other request parameters will be passed as query as usual.
+
+Json format for sending multiple locations in the body.
+
+{
+    "locations": [
+        {
+            "q": "53,-0.12",
+            "custom_id": "my-id-1"
+        },
+        {
+            "q": "London",
+            "custom_id": "any-internal-id"
+        },
+        {
+            "q": "90201",
+            "custom_id": "us-zipcode-id-765"
+        }
+    ]
+}
+
+Json format explanation
+Parameter Description
+q (required) You may pass lat and lon, US zipcode, UK postcode, city name, IP, etc.
+custom_id (optional) We will return this custom_id back in the response for you to use it at your end. It is for better management at your end. We don't use this id for anything.
+Bulk Request Example
+
+curl --location --request GET '<http://api.weatherapi.com/v1/current.json?key=YOUR_API_KEY&q=bulk>' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "locations": [
+        {
+            "q": "53,-0.12",
+            "custom_id": "my-id-1"
+        },
+        {
+            "q": "London",
+            "custom_id": "any-internal-id"
+        },
+        {
+            "q": "90201",
+            "custom_id": "us-zipcode-id-765"
+        }
+    ]
+}'
+
+Bulk Response
+
+{
+    "bulk": [
+        {
+            "query": {
+                "custom_id": "my-id-1",
+                "q": "53,-0.12",
+                "location": {
+                    "name": "Boston",
+                    "region": "Lincolnshire",
+                    "country": "United Kingdom",
+                    "lat": 53.0,
+                    "lon": -0.12,
+                    "tz_id": "Europe/London",
+                    "localtime_epoch": 1673620218,
+                    "localtime": "2023-01-13 14:30"
+                },
+                "current": {
+                    "last_updated_epoch": 1673620200,
+                    "last_updated": "2023-01-13 14:30",
+                    "temp_c": 8.7,
+                    "temp_f": 47.7,
+                    "is_day": 1,
+                    "condition": {
+                        "text": "Partly cloudy",
+                        "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
+                        "code": 1003
+                    },
+                    "wind_mph": 24.2,
+                    "wind_kph": 38.9,
+                    "wind_degree": 260,
+                    "wind_dir": "W",
+                    "pressure_mb": 1005.0,
+                    "pressure_in": 29.68,
+                    "precip_mm": 0.0,
+                    "precip_in": 0.0,
+                    "humidity": 74,
+                    "cloud": 75,
+                    "feelslike_c": 4.4,
+                    "feelslike_f": 39.9,
+                    "vis_km": 10.0,
+                    "vis_miles": 6.0,
+                    "uv": 2.0,
+                    "gust_mph": 33.1,
+                    "gust_kph": 53.3
+                }
+            }
+        },
+        {
+            "query": {
+                "custom_id": "any-internal-id",
+                "q": "London",
+                "location": {
+                    "name": "London",
+                    "region": "City of London, Greater London",
+                    "country": "United Kingdom",
+                    "lat": 51.52,
+                    "lon": -0.11,
+                    "tz_id": "Europe/London",
+                    "localtime_epoch": 1673620218,
+                    "localtime": "2023-01-13 14:30"
+                },
+                "current": {
+                    "last_updated_epoch": 1673620200,
+                    "last_updated": "2023-01-13 14:30",
+                    "temp_c": 11.0,
+                    "temp_f": 51.8,
+                    "is_day": 1,
+                    "condition": {
+                        "text": "Partly cloudy",
+                        "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
+                        "code": 1003
+                    },
+                    "wind_mph": 23.0,
+                    "wind_kph": 37.1,
+                    "wind_degree": 270,
+                    "wind_dir": "W",
+                    "pressure_mb": 1010.0,
+                    "pressure_in": 29.83,
+                    "precip_mm": 0.0,
+                    "precip_in": 0.0,
+                    "humidity": 58,
+                    "cloud": 75,
+                    "feelslike_c": 8.1,
+                    "feelslike_f": 46.5,
+                    "vis_km": 10.0,
+                    "vis_miles": 6.0,
+                    "uv": 2.0,
+                    "gust_mph": 22.4,
+                    "gust_kph": 36.0
+                }
+            }
+        },
+        {
+            "query": {
+                "custom_id": "us-zipcode-id-765",
+                "q": "90201",
+                "location": {
+                    "name": "Bell",
+                    "region": "California",
+                    "country": "USA",
+                    "lat": 33.97,
+                    "lon": -118.17,
+                    "tz_id": "America/Los_Angeles",
+                    "localtime_epoch": 1673620220,
+                    "localtime": "2023-01-13 6:30"
+                },
+                "current": {
+                    "last_updated_epoch": 1673620200,
+                    "last_updated": "2023-01-13 06:30",
+                    "temp_c": 10.0,
+                    "temp_f": 50.0,
+                    "is_day": 0,
+                    "condition": {
+                        "text": "Clear",
+                        "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+                        "code": 1000
+                    },
+                    "wind_mph": 2.2,
+                    "wind_kph": 3.6,
+                    "wind_degree": 10,
+                    "wind_dir": "N",
+                    "pressure_mb": 1020.0,
+                    "pressure_in": 30.13,
+                    "precip_mm": 0.0,
+                    "precip_in": 0.0,
+                    "humidity": 74,
+                    "cloud": 0,
+                    "feelslike_c": 10.3,
+                    "feelslike_f": 50.5,
+                    "vis_km": 16.0,
+                    "vis_miles": 9.0,
+                    "uv": 1.0,
+                    "gust_mph": 3.6,
+                    "gust_kph": 5.8
+                }
+            }
+        }
+    ]
+}
+
+API Error Codes
+If there is an error, API response contains error message including error code for following 4xx HTTP Status codes.
+
+HTTP Status Code Error code Description
+401 1002 API key not provided.
+400 1003 Parameter 'q' not provided.
+400 1005 API request url is invalid
+400 1006 No location found matching parameter 'q'
+401 2006 API key provided is invalid
+403 2007 API key has exceeded calls per month quota.
+403 2008 API key has been disabled.
+403 2009 API key does not have access to the resource. Please check pricing page for what is allowed in your API subscription plan.
+400 9000 Json body passed in bulk request is invalid. Please make sure it is valid json with utf-8 encoding.
+400 9001 Json body contains too many locations for bulk request. Please keep it below 50 in a single request.
+400 9999 Internal application error.
+APIs
+Realtime API
+Current weather or realtime weather API method allows a user to get up to date current weather information in json and xml. The data is returned as a Current Object.
+
+Current object contains current or realtime weather information for a given city.
+
+Field Data Type Description
+last_updated string Local time when the real time data was updated.
+last_updated_epoch int Local time when the real time data was updated in unix time.
+temp_c decimal Temperature in celsius
+temp_f decimal Temperature in fahrenheit
+feelslike_c decimal Feels like temperature in celsius
+feelslike_f decimal Feels like temperature in fahrenheit
+condition:text string Weather condition text
+condition:icon string Weather icon url
+condition:code int Weather condition unique code.
+wind_mph decimal Wind speed in miles per hour
+wind_kph decimal Wind speed in kilometer per hour
+wind_degree int Wind direction in degrees
+wind_dir string Wind direction as 16 point compass. e.g.: NSW
+pressure_mb decimal Pressure in millibars
+pressure_in decimal Pressure in inches
+precip_mm decimal Precipitation amount in millimeters
+precip_in decimal Precipitation amount in inches
+humidity int Humidity as percentage
+cloud int Cloud cover as percentage
+is_day int 1 = Yes 0 = No
+Whether to show day condition icon or night icon
+uv decimal UV Index
+gust_mph decimal Wind gust in miles per hour
+gust_kph decimal Wind gust in kilometer per hour
+Forecast API
+Forecast weather API method returns, depending upon your price plan level, upto next 14 day weather forecast and weather alert as json or xml. The data is returned as a Forecast Object.
+
+Forecast object contains astronomy data, day weather forecast and hourly interval weather information for a given city.
+
+forecastday: Parent element
+
+forecastday -> day: 'day' element inside forecastday contains max/min temperature, average temperature
+
+forecastday -> astro
+forecastday -> hour:
+
+Forecastday Parent element
+forecastday -> day day element contains:
+Max, min and average temperature
+Max wind speed
+Total precipitation
+Day weather condition
+forecastday -> astro astro element contains sunrise, sunset, moonrise and moonset data
+forecastday -> hour hour element contains hour by hour weather forecast information
+forecastday
+Field Data Type Description
+date string Forecast date
+date_epoch int Forecast date as unix time.
+day element See day element
+astro element See astro element
+hour element See hour element
+day Element
+Field Data Type Description
+maxtemp_c decimal Maximum temperature in celsius for the day.
+maxtemp_f decimal Maximum temperature in fahrenheit for the day
+mintemp_c decimal Minimum temperature in celsius for the day
+mintemp_f decimal Minimum temperature in fahrenheit for the day
+avgtemp_c decimal Average temperature in celsius for the day
+avgtemp_f decimal Average temperature in fahrenheit for the day
+maxwind_mph decimal Maximum wind speed in miles per hour
+maxwind_kph decimal Maximum wind speed in kilometer per hour
+totalprecip_mm decimal Total precipitation in milimeter
+totalprecip_in decimal Total precipitation in inches
+avgvis_km decimal Average visibility in kilometer
+avgvis_miles decimal Average visibility in miles
+avghumidity int Average humidity as percentage
+condition:text string Weather condition text
+condition:icon string Weather condition icon
+condition:code int Weather condition code
+uv decimal UV Index
+astro Element
+Field Data Type Description
+sunrise string Sunrise time
+sunset string Sunset time
+moonrise string Moonrise time
+moonset string Moonset time
+moon_phase string Moon phases. Value returned:
+New Moon
+Waxing Crescent
+First Quarter
+Waxing Gibbous
+Full Moon
+Waning Gibbous
+Last Quarter
+Waning Crescent
+moon_illumination decimal Moon illumination as %
+hour Element
+Field Data Type Description
+time_epoch int Time as epoch
+time string Date and time
+temp_c decimal Temperature in celsius
+temp_f decimal Temperature in fahrenheit
+condition:text string Weather condition text
+condition:icon string Weather condition icon
+condition:code int Weather condition code
+wind_mph decimal Maximum wind speed in miles per hour
+wind_kph decimal Maximum wind speed in kilometer per hour
+wind_degree int Wind direction in degrees
+wind_dir string Wind direction as 16 point compass. e.g.: NSW
+pressure_mb decimal Pressure in millibars
+pressure_in decimal Pressure in inches
+precip_mm decimal Precipitation amount in millimeters
+precip_in decimal Precipitation amount in inches
+humidity int Humidity as percentage
+cloud int Cloud cover as percentage
+feelslike_c decimal Feels like temperature as celcius
+feelslike_f decimal Feels like temperature as fahrenheit
+windchill_c decimal Windchill temperature in celcius
+windchill_f decimal Windchill temperature in fahrenheit
+heatindex_c decimal Heat index in celcius
+heatindex_f decimal Heat index in fahrenheit
+dewpoint_c decimal Dew point in celcius
+dewpoint_f decimal Dew point in fahrenheit
+will_it_rain int 1 = Yes 0 = No
+Will it will rain or not
+will_it_snow int 1 = Yes 0 = No
+Will it snow or not
+is_day int 1 = Yes 0 = No
+Whether to show day condition icon or night icon
+vis_km decimal Visibility in kilometer
+vis_miles decimal Visibility in miles
+chance_of_rain int Chance of rain as percentage
+chance_of_snow int Chance of snow as percentage
+gust_mph decimal Wind gust in miles per hour
+gust_kph decimal Wind gust in kilometer per hour
+uv decimal UV Index
+History API
+History weather API method returns, depending upon your price plan level, historical weather for a date on or after 1st Jan, 2010 as json and xml. The data is returned as a Forecast Object.
+
+Forecast object contains astronomy data, day weather forecast and hourly interval weather information for a given city.
+
+forecastday: Parent element
+
+forecastday -> day: 'day' element inside forecastday contains max/min temperature, average temperature
+
+forecastday -> astro
+forecastday -> hour:
+
+Forecastday Parent element
+forecastday -> day day element contains:
+Max, min and average temperature
+Max wind speed
+Total precipitation
+Day weather condition
+forecastday -> astro astro element contains sunrise, sunset, moonrise and moonset data
+forecastday -> hour hour element contains hour by hour weather forecast information
+forecastday
+Field Data Type Description
+date string Forecast date
+date_epoch int Forecast date as unix time.
+day element See day element
+astro element See astro element
+hour element See hour element
+day Element
+Field Data Type Description
+maxtemp_c decimal Maximum temperature in celsius for the day.
+maxtemp_f decimal Maximum temperature in fahrenheit for the day
+mintemp_c decimal Minimum temperature in celsius for the day
+mintemp_f decimal Minimum temperature in fahrenheit for the day
+avgtemp_c decimal Average temperature in celsius for the day
+avgtemp_f decimal Average temperature in fahrenheit for the day
+maxwind_mph decimal Maximum wind speed in miles per hour
+maxwind_kph decimal Maximum wind speed in kilometer per hour
+totalprecip_mm decimal Total precipitation in milimeter
+totalprecip_in decimal Total precipitation in inches
+avgvis_km decimal Average visibility in kilometer
+avgvis_miles decimal Average visibility in miles
+avghumidity int Average humidity as percentage
+condition:text string Weather condition text
+condition:icon string Weather condition icon
+condition:code int Weather condition code
+uv decimal UV Index
+astro Element
+Field Data Type Description
+sunrise string Sunrise time
+sunset string Sunset time
+moonrise string Moonrise time
+moonset string Moonset time
+moon_phase string Moon phases. Value returned:
+New Moon
+Waxing Crescent
+First Quarter
+Waxing Gibbous
+Full Moon
+Waning Gibbous
+Last Quarter
+Waning Crescent
+moon_illumination decimal Moon illumination as %
+hour Element
+Field Data Type Description
+time_epoch int Time as epoch
+time string Date and time
+temp_c decimal Temperature in celsius
+temp_f decimal Temperature in fahrenheit
+condition:text string Weather condition text
+condition:icon string Weather condition icon
+condition:code int Weather condition code
+wind_mph decimal Maximum wind speed in miles per hour
+wind_kph decimal Maximum wind speed in kilometer per hour
+wind_degree int Wind direction in degrees
+wind_dir string Wind direction as 16 point compass. e.g.: NSW
+pressure_mb decimal Pressure in millibars
+pressure_in decimal Pressure in inches
+precip_mm decimal Precipitation amount in millimeters
+precip_in decimal Precipitation amount in inches
+humidity int Humidity as percentage
+cloud int Cloud cover as percentage
+feelslike_c decimal Feels like temperature as celcius
+feelslike_f decimal Feels like temperature as fahrenheit
+windchill_c decimal Windchill temperature in celcius
+windchill_f decimal Windchill temperature in fahrenheit
+heatindex_c decimal Heat index in celcius
+heatindex_f decimal Heat index in fahrenheit
+dewpoint_c decimal Dew point in celcius
+dewpoint_f decimal Dew point in fahrenheit
+will_it_rain int 1 = Yes 0 = No
+Will it will rain or not
+will_it_snow int 1 = Yes 0 = No
+Will it snow or not
+is_day int 1 = Yes 0 = No
+Whether to show day condition icon or night icon
+vis_km decimal Visibility in kilometer
+vis_miles decimal Visibility in miles
+Marine Weather API
+Marine weather API method returns upto next 7 day (depending upon your price plan level) marine and sailing weather forecast and tide data (depending upon your price plan level) as json or xml. The data is returned as a Marine Object.
+
+Marine object, depending upon your price plan level, contains astronomy data, day weather forecast and hourly interval weather information and tide data for a given sea/ocean point.
+
+forecastday: Parent element
+
+forecastday -> day: 'day' element inside forecastday contains max/min temperature, average temperature
+
+forecastday -> astro
+forecastday -> tide
+forecastday -> hour:
+
+Forecastday Parent element
+forecastday -> day day element contains:
+Max, min and average temperature
+Max wind speed
+Total precipitation
+Day weather condition
+forecastday -> astro astro element contains sunrise, sunset, moonrise and moonset data
+forecastday -> tides tides element contains high and low tide data
+forecastday -> hour hour element contains hour by hour weather forecast information
+forecastday
+Field Data Type Description
+date string Forecast date
+date_epoch int Forecast date as unix time.
+day element See day element
+astro element See astro element
+tides element See tides element
+hour element See hour element
+day Element
+Field Data Type Description
+maxtemp_c decimal Maximum temperature in celsius for the day.
+maxtemp_f decimal Maximum temperature in fahrenheit for the day
+mintemp_c decimal Minimum temperature in celsius for the day
+mintemp_f decimal Minimum temperature in fahrenheit for the day
+avgtemp_c decimal Average temperature in celsius for the day
+avgtemp_f decimal Average temperature in fahrenheit for the day
+maxwind_mph decimal Maximum wind speed in miles per hour
+maxwind_kph decimal Maximum wind speed in kilometer per hour
+totalprecip_mm decimal Total precipitation in milimeter
+totalprecip_in decimal Total precipitation in inches
+avgvis_km decimal Average visibility in kilometer
+avgvis_miles decimal Average visibility in miles
+avghumidity int Average humidity as percentage
+condition:text string Weather condition text
+condition:icon string Weather condition icon
+condition:code int Weather condition code
+uv decimal UV Index
+astro Element
+Field Data Type Description
+sunrise string Sunrise time
+sunset string Sunset time
+moonrise string Moonrise time
+moonset string Moonset time
+moon_phase string Moon phases. Value returned:
+New Moon
+Waxing Crescent
+First Quarter
+Waxing Gibbous
+Full Moon
+Waning Gibbous
+Last Quarter
+Waning Crescent
+moon_illumination decimal Moon illumination as %
+tides Element
+Field Data Type Description
+tide_time string Local tide time
+tide_height_mt float Tide height in mt
+tide_type string Type of tide i.e. High or Low
+hour Element
+Field Data Type Description
+time_epoch int Time as epoch
+time string Date and time
+temp_c decimal Temperature in celsius
+temp_f decimal Temperature in fahrenheit
+condition:text string Weather condition text
+condition:icon string Weather condition icon
+condition:code int Weather condition code
+wind_mph decimal Maximum wind speed in miles per hour
+wind_kph decimal Maximum wind speed in kilometer per hour
+wind_degree int Wind direction in degrees
+wind_dir string Wind direction as 16 point compass. e.g.: NSW
+pressure_mb decimal Pressure in millibars
+pressure_in decimal Pressure in inches
+precip_mm decimal Precipitation amount in millimeters
+precip_in decimal Precipitation amount in inches
+humidity int Humidity as percentage
+cloud int Cloud cover as percentage
+feelslike_c decimal Feels like temperature as celcius
+feelslike_f decimal Feels like temperature as fahrenheit
+windchill_c decimal Windchill temperature in celcius
+windchill_f decimal Windchill temperature in fahrenheit
+heatindex_c decimal Heat index in celcius
+heatindex_f decimal Heat index in fahrenheit
+dewpoint_c decimal Dew point in celcius
+dewpoint_f decimal Dew point in fahrenheit
+will_it_rain int 1 = Yes 0 = No
+Will it will rain or not
+will_it_snow int 1 = Yes 0 = No
+Will it snow or not
+is_day int 1 = Yes 0 = No
+Whether to show day condition icon or night icon
+vis_km decimal Visibility in kilometer
+vis_miles decimal Visibility in miles
+chance_of_rain int Chance of rain as percentage
+chance_of_snow int Chance of snow as percentage
+gust_mph decimal Wind gust in miles per hour
+gust_kph decimal Wind gust in kilometer per hour
+sig_ht_mt decimal Significant wave height in metres
+swell_ht_mt decimal Swell wave height in metres
+swell_ht_ft decimal Swell wave height in feet
+swell_dir decimal Swell direction in degrees
+swell_dir_16_point decimal Swell direction in 16 point compass
+swell_period_secs decimal Swell period in seconds
+water_temp_c decimal Water temperature in Celcius
+water_temp_f decimal Water temperature in Fahrenheit
+uv decimal UV Index
+Future Weather API
+Future weather API method returns weather in a 3 hourly interval in future for a date between 14 days and 300 days from today in the future.
+
+Forecast object contains astronomy data, day weather forecast and hourly interval weather information for a given city.
+
+forecastday: Parent element
+
+forecastday -> day: 'day' element inside forecastday contains max/min temperature, average temperature
+
+forecastday -> astro
+forecastday -> hour:
+
+Forecastday Parent element
+forecastday -> day day element contains:
+Max, min and average temperature
+Max wind speed
+Total precipitation
+Day weather condition
+forecastday -> astro astro element contains sunrise, sunset, moonrise and moonset data
+forecastday -> hour hour element contains hour by hour weather forecast information
+forecastday
+Field Data Type Description
+date string Forecast date
+date_epoch int Forecast date as unix time.
+day element See day element
+astro element See astro element
+hour element See hour element
+day Element
+Field Data Type Description
+maxtemp_c decimal Maximum temperature in celsius for the day.
+maxtemp_f decimal Maximum temperature in fahrenheit for the day
+mintemp_c decimal Minimum temperature in celsius for the day
+mintemp_f decimal Minimum temperature in fahrenheit for the day
+avgtemp_c decimal Average temperature in celsius for the day
+avgtemp_f decimal Average temperature in fahrenheit for the day
+maxwind_mph decimal Maximum wind speed in miles per hour
+maxwind_kph decimal Maximum wind speed in kilometer per hour
+totalprecip_mm decimal Total precipitation in milimeter
+totalprecip_in decimal Total precipitation in inches
+avgvis_km decimal Average visibility in kilometer
+avgvis_miles decimal Average visibility in miles
+avghumidity int Average humidity as percentage
+condition:text string Weather condition text
+condition:icon string Weather condition icon
+condition:code int Weather condition code
+uv decimal UV Index
+astro Element
+Field Data Type Description
+sunrise string Sunrise time
+sunset string Sunset time
+moonrise string Moonrise time
+moonset string Moonset time
+moon_phase string Moon phases. Value returned:
+New Moon
+Waxing Crescent
+First Quarter
+Waxing Gibbous
+Full Moon
+Waning Gibbous
+Last Quarter
+Waning Crescent
+moon_illumination decimal Moon illumination as %
+hour Element
+Field Data Type Description
+time_epoch int Time as epoch
+time string Date and time
+temp_c decimal Temperature in celsius
+temp_f decimal Temperature in fahrenheit
+condition:text string Weather condition text
+condition:icon string Weather condition icon
+condition:code int Weather condition code
+wind_mph decimal Maximum wind speed in miles per hour
+wind_kph decimal Maximum wind speed in kilometer per hour
+wind_degree int Wind direction in degrees
+wind_dir string Wind direction as 16 point compass. e.g.: NSW
+pressure_mb decimal Pressure in millibars
+pressure_in decimal Pressure in inches
+precip_mm decimal Precipitation amount in millimeters
+precip_in decimal Precipitation amount in inches
+humidity int Humidity as percentage
+cloud int Cloud cover as percentage
+feelslike_c decimal Feels like temperature as celcius
+feelslike_f decimal Feels like temperature as fahrenheit
+windchill_c decimal Windchill temperature in celcius
+windchill_f decimal Windchill temperature in fahrenheit
+heatindex_c decimal Heat index in celcius
+heatindex_f decimal Heat index in fahrenheit
+dewpoint_c decimal Dew point in celcius
+dewpoint_f decimal Dew point in fahrenheit
+will_it_rain int 1 = Yes 0 = No
+Will it will rain or not
+will_it_snow int 1 = Yes 0 = No
+Will it snow or not
+is_day int 1 = Yes 0 = No
+Whether to show day condition icon or night icon
+vis_km decimal Visibility in kilometer
+vis_miles decimal Visibility in miles
+Search/Autocomplete API
+WeatherAPI.com Search or Autocomplete API returns matching cities and towns as an array of Location object.
+
+IP Lookup API
+IP Lookup API method allows a user to get up to date information for an IP address in json and xml.
+
+Field Data Type Description
+ip string IP address
+type string ipv4 or ipv6
+continent_code string Continent code
+continent_name string Continent name
+country_code string Country code
+country_name string Name of country
+is_eu bool true or false
+geoname_id string Geoname ID
+city string City name
+region string Region name
+lat decimal Latitude in decimal degree
+lon decimal Longitude in decimal degree
+tz_id string Time zone
+Astronomy API
+Astronomy API method allows a user to get up to date information for sunrise, sunset, moonrise, moonset, moon phase and illumination in json and xml.
+
+Field Data Type Description
+sunrise string Sunrise local time
+sunset string Sunset local time
+moonrise string Moonrise local time
+moonset string Moonset local time
+moon_phase string Moon phases
+moon_illumination int Moon illumination
+Time Zone API
+Time Zone API method allows a user to get up to date time zone and local time information in json and xml.
+
+Field Data Type Description
+tz_id string Time zone id
+localtime_epoch int Local time in epoch.
+localtime string Local time in yyyy-MM-dd HH:mm format
+Sports API
+Sports API method allows a user to get listing of all upcoming sports events for football, cricket and golf in json and xml.
+
+Field Data Type Description
+stadium string Name of stadium
+country int Country
+region string Region
+tournament string Tournament name
+start string Start local date and time for event in yyyy-MM-dd HH:mm format.
+match string Match name

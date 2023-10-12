@@ -1,13 +1,21 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../widget/app_bar.dart';
-import '../../../widget/glassbox.dart';
+import 'package:provider/provider.dart';
+
+import '../../../model/forecastday.dart';
+import '../../../model/hour.dart';
+import '../../../provider/weather_provider.dart';
+import '../../widget/app_bar.dart';
+import '../../widget/glassbox.dart';
 import '../../next7dayscreen/next7days_screen.dart';
 
 class DaysWearbar extends StatefulWidget {
+  final List<Forecastday>? forecastday;
   const DaysWearbar({
     super.key,
+    this.forecastday,
   });
 
   @override
@@ -24,12 +32,20 @@ class _DaysWearState extends State<DaysWearbar> {
     {'time': '05:00', 'img': 'images/clud_icon_bar.png', 'degr': '22 °'},
   ];
   bool isTap = true;
+  List<Hour>? day;
+  @override
+  void initState() {
+    super.initState();
+    day = widget.forecastday![0].hour;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final wprov = Provider.of<WeatherProvider>(context, listen: false);
     return Column(
       children: [
         Container(
-          height: 45.h,
+          // height: 45.h,
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: Row(children: [
             TextButton(
@@ -38,6 +54,7 @@ class _DaysWearState extends State<DaysWearbar> {
                   return;
                 }
                 isTap = !isTap;
+                day = widget.forecastday![0].hour;
                 setState(() {});
               },
               child: Text(
@@ -56,6 +73,7 @@ class _DaysWearState extends State<DaysWearbar> {
                   return;
                 }
                 isTap = !isTap;
+                day = widget.forecastday![1].hour;
                 setState(() {});
               },
               child: Text(
@@ -72,7 +90,8 @@ class _DaysWearState extends State<DaysWearbar> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const Next7DaysScrren()));
+                    builder: (context) =>
+                        Next7DaysScrren(forecastday: widget.forecastday)));
               },
               child: Row(
                 children: [
@@ -117,40 +136,62 @@ class _DaysWearState extends State<DaysWearbar> {
           child: ListView.builder(
               physics: const BouncingScrollPhysics(),
               scrollDirection: Axis.horizontal,
-              itemCount: weaerlist.length,
-              itemBuilder: (context, index) => Container(
+              // itemCount: weaerlist.length,
+              itemCount: day!.length,
+              itemBuilder: (context, index) {
+                return Container(
+                  padding:
+                      EdgeInsets.symmetric(vertical: 10.h, horizontal: 8.w),
+                  child: GlassBox(
                     padding:
-                        EdgeInsets.symmetric(vertical: 10.h, horizontal: 8.w),
-                    child: GlassBox(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
-                      height: 150.h,
-                      width: 60.w,
-                      borderRadius: 20.r,
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Text(
-                              weaerlist[index]['time'],
-                              style: TextStyle(fontSize: 14.sp),
+                        EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                    height: 150.h,
+                    width: 60.w,
+                    borderRadius: 20.r,
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          FittedBox(
+                            child: Text(
+                              // weaerlist[index]['time'],
+                              wprov.hapmformat(
+                                  isTap: isTap, day: day![index].time!),
+
+                              style: TextStyle(
+                                  fontSize: 14.sp, fontWeight: FontWeight.w500),
                             ),
-                            SizedBox(
-                                height: 40.h,
-                                width: 40.w,
-                                child: Image.asset(
-                                  weaerlist[index]['img'],
-                                  fit: BoxFit.cover,
-                                )),
-                            Text(
-                              weaerlist[index]['degr'],
-                              style: TextStyle(fontSize: 16.sp),
-                            )
-                          ],
-                        ),
+                          ),
+                          SizedBox(
+                            height: 40.h,
+                            width: 40.w,
+                            // child: Image.asset(
+                            child: CachedNetworkImage(
+                              imageUrl: "http:${day![index].condition!.icon}",
+                              // placeholder: (context, url) => CircularProgressIndicator(),
+                              errorWidget: (context, url, error) => const Icon(
+                                Icons.error,
+                                color: Color(0xfff39876),
+                              ),
+                            ),
+                            // Image.network(
+                            //   // weaerlist[index]['img'],
+                            //   'http:${day![index].condition!.icon}',
+                            //   fit: BoxFit.cover,
+                            // )
+                          ),
+                          Text(
+                            // weaerlist[index]['degr'],
+                            '${day![index].tempC}',
+                            style: TextStyle(
+                                fontSize: 16.sp, fontWeight: FontWeight.w500),
+                          )
+                        ],
                       ),
                     ),
-                  )),
+                  ),
+                );
+              }),
         )
       ],
     );
