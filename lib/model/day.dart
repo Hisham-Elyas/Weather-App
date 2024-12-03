@@ -15,7 +15,7 @@ class Day {
   double? totalsnowCm;
   double? avgvisKm;
   double? avgvisMiles;
-  double? avghumidity;
+  int? avghumidity;
   int? dailyWillItRain;
   int? dailyChanceOfRain;
   int? dailyWillItSnow;

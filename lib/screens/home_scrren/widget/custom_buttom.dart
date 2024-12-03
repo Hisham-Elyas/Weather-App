@@ -15,8 +15,8 @@ class CustomButtom extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: onPressed,
-      style: const ButtonStyle(
-          padding: MaterialStatePropertyAll(EdgeInsets.all(5))),
+      style:
+          const ButtonStyle(padding: WidgetStatePropertyAll(EdgeInsets.all(5))),
       child: GlassBox(
           height: 50.h,
           width: 250.w,

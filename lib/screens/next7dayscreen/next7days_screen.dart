@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:provider/provider.dart';
-import 'package:weather_app/screens/next7dayscreen/widget/next7bays_bottom_body_widget.dart';
-import 'package:weather_app/screens/next7dayscreen/widget/top_body_betils_widget.dart';
-import 'package:weather_app/screens/widget/glassbox.dart';
+import 'widget/next7bays_bottom_body_widget.dart';
+import 'widget/top_body_betils_widget.dart';
+import '../widget/glassbox.dart';
 
 import '../../model/forecastday.dart';
 import '../../provider/weather_provider.dart';
@@ -70,136 +70,142 @@ class Next7DaysScrren extends StatelessWidget {
         child: SafeArea(
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 25.w, vertical: 15.h),
-            child: Column(
-                // mainAxisAlignment: MainAxisAlignment.center,
-                // crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  GlassBox(
-                    height: 190.h,
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-                    width: double.maxFinite,
-                    borderRadius: 20.r,
-                    child: Column(children: [
-                      SizedBox(
-                        height: 70.h,
-                        child: Row(
-                          children: [
-                            Text('Tommorow ',
-                                style: TextStyle(
-                                    fontSize: 18.sp,
-                                    color: const Color(0xFF303345),
-                                    fontWeight: FontWeight.bold)),
-                            Expanded(child: Container()),
-                            Text(
-                                // '22 °',
-
-                                '${wprov.tommorowDay()!.day!.maxtempC}',
-                                style: TextStyle(
-                                    fontSize: 16.sp,
-                                    color: const Color(0xFF303345),
-                                    fontWeight: FontWeight.bold)),
-                            SizedBox(
-                              width: 75.w,
-                              height: 75.h,
-                              child:
-                                  //  Image.asset(
-                                  //   'images/page2_icon.png',
-
-                                  CachedNetworkImage(
-                                imageUrl:
-                                    "http:${wprov.tommorowDay()!.day!.condition!.icon}",
-                                // placeholder: (context, url) => CircularProgressIndicator(),
-                                errorWidget: (context, url, error) =>
-                                    const Icon(Icons.error,
-                                        color: Color(0xfff39876)),
-                              ),
-                              //     Image.network(
-                              //   'http:${wprov.currentfday()!.day!.condition!.icon}',
-                              //   fit: BoxFit.cover,
-                              // ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 28.w, vertical: 8.h),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                TopBodyDetils(
-                                    imgSisz: 40.h,
-                                    img: 'images/unbrellaicon.png',
-                                    title:
-                                        '${wprov.tommorowDay()!.day!.avgvisMiles!.toInt()} cm'),
-                                TopBodyDetils(
-                                    imgSisz: 40.h,
-                                    img: 'images/wind_icon.png',
-                                    title:
-                                        '${wprov.tommorowDay()!.day!.maxwindKph!.toInt()} km/h'),
-                                TopBodyDetils(
-                                  imgSisz: 40.h,
-                                  img: 'images/humidity_icon.png',
-                                  title:
-                                      '${wprov.tommorowDay()!.day!.avghumidity!.toInt()} %',
-                                ),
-                              ]),
-                        ),
-                      )
-                    ]),
-                  ),
-
-                  SizedBox(height: 20.h),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: forecastday!.length,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          children: [
-                            Next7DaysWidget(
-                              day: wprov.dayformat(day: index),
-                              degree: '${forecastday![index].day!.maxtempC} °',
-                              img:
-                                  'http:${forecastday![1].day!.condition!.icon}',
-                            ),
-                            SizedBox(height: 10.h),
-                          ],
-                        );
-                      },
-                    ),
+            child: forecastday == null
+                ? const Center(
+                    child: Text('Error Try again later'),
                   )
-                  // const Next7DaysWidget(
-                  //   day: 'Friday',
-                  //   degree: '24 °',
-                  //   img: 'images/sun1_icon_bar.png',
-                  // ),
-                  // SizedBox(height: 10.h),
-                  // const Next7DaysWidget(
-                  //   day: 'Saturday',
-                  //   degree: '18 °',
-                  //   img: 'images/page2_icon.png',
-                  // ),
-                  // SizedBox(height: 10.h),
-                  // const Next7DaysWidget(
-                  //   day: 'Sunday',
-                  //   degree: '12 °',
-                  //   img: 'images/clud2.png',
-                  // ),
-                  // SizedBox(height: 10.h),
-                  // const Next7DaysWidget(
-                  //   day: 'Monday',
-                  //   degree: '16 °',
-                  //   img: 'images/clud_raining_icon.png',
-                  // ),
-                  // SizedBox(height: 10.h),
-                  // const Next7DaysWidget(
-                  //   day: 'Tuesday',
-                  //   degree: '18 °',
-                  //   img: 'images/clud_raining_icon.png',
-                  // ),
-                ]),
+                : Column(
+                    // mainAxisAlignment: MainAxisAlignment.center,
+                    // crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                        GlassBox(
+                          height: 200.h,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20.w, vertical: 20.h),
+                          width: double.maxFinite,
+                          borderRadius: 20.r,
+                          child: Column(children: [
+                            SizedBox(
+                              height: 70.h,
+                              child: Row(
+                                children: [
+                                  Text('Tommorow ',
+                                      style: TextStyle(
+                                          fontSize: 18.sp,
+                                          color: const Color(0xFF303345),
+                                          fontWeight: FontWeight.bold)),
+                                  Expanded(child: Container()),
+                                  Text(
+                                      // '22 °',
+
+                                      '${wprov.tommorowDay()!.day!.maxtempC}',
+                                      style: TextStyle(
+                                          fontSize: 16.sp,
+                                          color: const Color(0xFF303345),
+                                          fontWeight: FontWeight.bold)),
+                                  SizedBox(
+                                    width: 75.w,
+                                    height: 75.h,
+                                    child:
+                                        //  Image.asset(
+                                        //   'images/page2_icon.png',
+
+                                        CachedNetworkImage(
+                                      imageUrl:
+                                          "http:${wprov.tommorowDay()!.day!.condition!.icon}",
+                                      // placeholder: (context, url) => CircularProgressIndicator(),
+                                      errorWidget: (context, url, error) =>
+                                          const Icon(Icons.error,
+                                              color: Color(0xfff39876)),
+                                    ),
+                                    //     Image.network(
+                                    //   'http:${wprov.currentfday()!.day!.condition!.icon}',
+                                    //   fit: BoxFit.cover,
+                                    // ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 28.w, vertical: 8.h),
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      TopBodyDetils(
+                                          imgSisz: 35.h,
+                                          img: 'images/unbrellaicon.png',
+                                          title:
+                                              '${wprov.tommorowDay()!.day!.avgvisMiles!.toInt()} cm'),
+                                      TopBodyDetils(
+                                          imgSisz: 35.h,
+                                          img: 'images/wind_icon.png',
+                                          title:
+                                              '${wprov.tommorowDay()!.day!.maxwindKph!.toInt()} km/h'),
+                                      TopBodyDetils(
+                                        imgSisz: 35.h,
+                                        img: 'images/humidity_icon.png',
+                                        title:
+                                            '${wprov.tommorowDay()!.day!.avghumidity!.toInt()} %',
+                                      ),
+                                    ]),
+                              ),
+                            )
+                          ]),
+                        ),
+
+                        SizedBox(height: 20.h),
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: forecastday!.length,
+                            itemBuilder: (context, index) {
+                              return Column(
+                                children: [
+                                  Next7DaysWidget(
+                                    day: wprov.dayformat(day: index),
+                                    degree:
+                                        '${forecastday![index].day!.maxtempC} °',
+                                    img:
+                                        'http:${forecastday![1].day!.condition!.icon}',
+                                  ),
+                                  SizedBox(height: 10.h),
+                                ],
+                              );
+                            },
+                          ),
+                        )
+                        // const Next7DaysWidget(
+                        //   day: 'Friday',
+                        //   degree: '24 °',
+                        //   img: 'images/sun1_icon_bar.png',
+                        // ),
+                        // SizedBox(height: 10.h),
+                        // const Next7DaysWidget(
+                        //   day: 'Saturday',
+                        //   degree: '18 °',
+                        //   img: 'images/page2_icon.png',
+                        // ),
+                        // SizedBox(height: 10.h),
+                        // const Next7DaysWidget(
+                        //   day: 'Sunday',
+                        //   degree: '12 °',
+                        //   img: 'images/clud2.png',
+                        // ),
+                        // SizedBox(height: 10.h),
+                        // const Next7DaysWidget(
+                        //   day: 'Monday',
+                        //   degree: '16 °',
+                        //   img: 'images/clud_raining_icon.png',
+                        // ),
+                        // SizedBox(height: 10.h),
+                        // const Next7DaysWidget(
+                        //   day: 'Tuesday',
+                        //   degree: '18 °',
+                        //   img: 'images/clud_raining_icon.png',
+                        // ),
+                      ]),
           ),
         ),
       ),

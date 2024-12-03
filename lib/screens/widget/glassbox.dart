@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 
 class GlassBox extends StatelessWidget {
   final Widget child;
-  final double height;
-  final double width;
+  final double? height;
+  final double? width;
   final double borderRadius;
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
   const GlassBox(
       {super.key,
       required this.child,
-      required this.height,
-      required this.width,
+      this.height,
+      this.width,
       required this.borderRadius,
       this.padding,
       this.margin});
