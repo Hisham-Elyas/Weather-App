@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:weather_app/screens/home_scrren/home_scrren.dart';
+import 'screens/home_scrren/home_scrren.dart';
 
 import 'provider/serch_provider.dart';
 import 'provider/weather_provider.dart';
@@ -15,6 +15,7 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+  await ScreenUtil.ensureScreenSize();
   await SharedPrrf().initsharedPref();
   runApp(const MyApp());
 }

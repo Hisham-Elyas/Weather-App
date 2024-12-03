@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
@@ -31,6 +33,11 @@ class StartScren extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          // SizedBox(
+          //     // height: 200,
+          //     // width: 200,
+          //     child: Image(image: AssetImage('images/clud_icon_bar.png'))),
+          // Image.asset('images/clud_icon_bar.png'),
           Text('Welcome',
               style: TextStyle(
                   fontWeight: FontWeight.bold,

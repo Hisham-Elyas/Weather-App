@@ -1,5 +1,8 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +38,8 @@ class WeatherProvider extends ChangeNotifier {
 
     try {
       final response = await http.get(api);
-
+      log(response.body);
+      log(response.statusCode.toString());
       final data = WeatherData.fromJson(jsonDecode(response.body));
       SharedPrrf.sharedPreferences!.setString('contry', contry);
       SharedPrrf.sharedPreferences!.setString('data', response.body);

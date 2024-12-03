@@ -1,10 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
-import 'package:weather_app/model/search.dart';
+import '../model/search.dart';
 
 class SerchProvider extends ChangeNotifier {
   claerSearch() {
@@ -36,9 +38,7 @@ class SerchProvider extends ChangeNotifier {
         searchlist.add(Search.fromJson(element));
       }
       if (searchlist.isEmpty) {
-        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           /// need to set following properties for best effect of awesome_snackbar_content
           elevation: 0,

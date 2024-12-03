@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
@@ -45,8 +47,8 @@ class SearchScreen extends StatelessWidget {
                           Icons.search,
                           color: Color(0xfff39876),
                         ),
-                        padding: MaterialStatePropertyAll(
-                            EdgeInsets.only(left: 25.w)),
+                        padding:
+                            WidgetStatePropertyAll(EdgeInsets.only(left: 25.w)),
                         trailing: [
                           if (weatherdata.isSearchController())
                             IconButton(
